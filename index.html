@@ -424,6 +424,48 @@
             background: #7cb358;
         }
 
+        /* Customer Details Form */
+        .customer-details {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        .customer-details h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+        }
+
+        .form-group input, 
+        .form-group textarea {
+            width: 100%;
+            padding: 0.7rem;
+            border-radius: var(--border-radius);
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        /* Cart Toggle Button */
         .cart-toggle {
             position: fixed;
             bottom: 2rem;
@@ -581,68 +623,6 @@
             cursor: pointer;
         }
 
-        /* Special Request Section */
-        .special-request {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            margin: 2rem 0;
-            box-shadow: var(--box-shadow);
-        }
-
-        .special-request h3 {
-            color: var(--primary);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .special-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .form-group label {
-            font-weight: 600;
-        }
-
-        .form-group input, 
-        .form-group textarea {
-            padding: 0.8rem;
-            border-radius: var(--border-radius);
-            border: 1px solid #ddd;
-        }
-
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .submit-request {
-            grid-column: 1 / -1;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .submit-request:hover {
-            background: #7cb358;
-        }
-
         /* Footer */
         footer {
             background: var(--dark);
@@ -702,10 +682,6 @@
         @media (max-width: 992px) {
             .cart-container {
                 width: 320px;
-            }
-            
-            .special-form {
-                grid-template-columns: 1fr;
             }
         }
 
@@ -776,34 +752,6 @@
         <div class="products-grid" id="productsGrid">
             <!-- Products will be dynamically added here -->
         </div>
-        
-        <!-- Special Request Section -->
-        <div class="special-request">
-            <h3><i class="fas fa-concierge-bell"></i> Special Requests & Delivery</h3>
-            <form class="special-form" id="specialRequestForm">
-                <div class="form-group">
-                    <label for="customerName">Full Name *</label>
-                    <input type="text" id="customerName" placeholder="Enter your full name" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="customerContact">Email or Phone *</label>
-                    <input type="text" id="customerContact" placeholder="Enter email or phone" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="deliveryAddress">Delivery Address *</label>
-                    <textarea id="deliveryAddress" placeholder="Enter your full delivery address" required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="specialItems">Special Items Request</label>
-                    <textarea id="specialItems" placeholder="List any specific items you need that are not in our catalog..."></textarea>
-                </div>
-                
-                <button type="submit" class="submit-request">Submit Request</button>
-            </form>
-        </div>
     </div>
 
     <!-- Cart Sidebar -->
@@ -825,7 +773,32 @@
                 <span>Total:</span>
                 <span id="cartTotal">ZK 0.00</span>
             </div>
-            <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+            
+            <!-- Customer Details Form -->
+            <div class="customer-details">
+                <h4><i class="fas fa-user"></i> Delivery Information</h4>
+                <div class="form-group">
+                    <label for="customerName">Full Name *</label>
+                    <input type="text" id="customerName" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerContact">Email or Phone *</label>
+                    <input type="text" id="customerContact" placeholder="Enter email or phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deliveryAddress">Delivery Address *</label>
+                    <textarea id="deliveryAddress" placeholder="Enter your full delivery address" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="specialRequests">Special Requests</label>
+                    <textarea id="specialRequests" placeholder="Any special instructions for your order..."></textarea>
+                </div>
+            </div>
+            
+            <button class="checkout-btn" id="checkoutBtn">Place Order</button>
         </div>
     </div>
 
@@ -868,11 +841,6 @@
             <h3 style="margin-top: 2rem;">All Orders</h3>
             <div class="admin-list" id="orderList">
                 <!-- Orders will be listed here -->
-            </div>
-            
-            <h3 style="margin-top: 2rem;">Special Requests</h3>
-            <div class="admin-list" id="requestList">
-                <!-- Special requests will be listed here -->
             </div>
             
             <button class="close-admin" id="closeAdmin">Close Admin Panel</button>
@@ -968,8 +936,6 @@
         const addProductBtn = document.getElementById('addProductBtn');
         const productList = document.getElementById('productList');
         const orderList = document.getElementById('orderList');
-        const requestList = document.getElementById('requestList');
-        const specialRequestForm = document.getElementById('specialRequestForm');
 
         // Initialize the app
         function initApp() {
@@ -978,7 +944,6 @@
             loadCartFromStorage();
             renderProductList();
             renderOrderList();
-            renderRequestList();
         }
 
         // Load cart from localStorage
@@ -1148,6 +1113,17 @@
                 return;
             }
             
+            // Get customer details
+            const customerName = document.getElementById('customerName').value;
+            const customerContact = document.getElementById('customerContact').value;
+            const deliveryAddress = document.getElementById('deliveryAddress').value;
+            const specialRequests = document.getElementById('specialRequests').value;
+            
+            if (!customerName || !customerContact || !deliveryAddress) {
+                alert("Please fill in all required fields: Name, Email/Phone, and Delivery Address");
+                return;
+            }
+            
             // Create a mock order
             const order = {
                 id: Date.now(),
@@ -1155,9 +1131,10 @@
                 total: parseFloat(cartTotal.textContent.replace('ZK ', '')),
                 status: 'pending',
                 date: new Date().toLocaleDateString(),
-                customerName: document.getElementById('customerName').value || 'Not provided',
-                customerContact: document.getElementById('customerContact').value || 'Not provided',
-                deliveryAddress: document.getElementById('deliveryAddress').value || 'Not provided'
+                customerName,
+                customerContact,
+                deliveryAddress,
+                specialRequests: specialRequests || "No special requests"
             };
             
             // Save order to localStorage
@@ -1173,6 +1150,12 @@
             updateCart();
             cartContainer.classList.remove('active');
             overlay.classList.remove('active');
+            
+            // Reset customer details form
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerContact').value = '';
+            document.getElementById('deliveryAddress').value = '';
+            document.getElementById('specialRequests').value = '';
             
             // Update order list
             renderOrderList();
@@ -1216,39 +1199,13 @@
                         <div style="margin-top:0.5rem;">
                             <strong>Customer:</strong> ${order.customerName}<br>
                             <strong>Contact:</strong> ${order.customerContact}<br>
-                            <strong>Address:</strong> ${order.deliveryAddress}
+                            <strong>Address:</strong> ${order.deliveryAddress}<br>
+                            <strong>Special Requests:</strong> ${order.specialRequests}
                         </div>
                     </div>
                     <span style="color:var(--secondary); font-weight:bold;">${order.status}</span>
                 `;
                 orderList.appendChild(orderDiv);
-            });
-        }
-
-        // Render request list in admin panel
-        function renderRequestList() {
-            requestList.innerHTML = '';
-            const requests = JSON.parse(localStorage.getItem('glowBasketRequests') || '[]');
-            
-            if (requests.length === 0) {
-                requestList.innerHTML = '<p>No special requests yet</p>';
-                return;
-            }
-            
-            requests.forEach(request => {
-                const requestDiv = document.createElement('div');
-                requestDiv.className = 'admin-list-item';
-                requestDiv.innerHTML = `
-                    <div>
-                        <strong>Request #${request.id}</strong><br>
-                        <div><strong>Customer:</strong> ${request.name}</div>
-                        <div><strong>Contact:</strong> ${request.phone}</div>
-                        <div><strong>Address:</strong> ${request.address}</div>
-                        <div style="margin-top:0.5rem;"><strong>Items:</strong> ${request.items}</div>
-                        <div><small>${request.date}</small></div>
-                    </div>
-                `;
-                requestList.appendChild(requestDiv);
             });
         }
 
@@ -1308,44 +1265,6 @@
                 
                 alert("Product loaded for editing. You can update the form and save changes.");
             }
-        }
-
-        // Handle special request form
-        function handleSpecialRequest(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('customerName').value;
-            const contact = document.getElementById('customerContact').value;
-            const address = document.getElementById('deliveryAddress').value;
-            const items = document.getElementById('specialItems').value;
-            
-            if (!name || !contact || !address) {
-                alert("Please fill in all required fields");
-                return;
-            }
-            
-            // Create a mock special request
-            const request = {
-                id: Date.now(),
-                name,
-                contact,
-                address,
-                items: items || "No specific items requested",
-                date: new Date().toLocaleDateString()
-            };
-            
-            // Save to localStorage
-            const requests = JSON.parse(localStorage.getItem('glowBasketRequests') || '[]');
-            requests.push(request);
-            localStorage.setItem('glowBasketRequests', JSON.stringify(requests));
-            
-            alert("Your request has been submitted successfully! We'll contact you shortly to confirm your order.");
-            
-            // Reset form
-            specialRequestForm.reset();
-            
-            // Update admin panel
-            renderRequestList();
         }
 
         // Setup event listeners
@@ -1408,9 +1327,6 @@
             
             // Add product button
             addProductBtn.addEventListener('click', addProduct);
-            
-            // Special request form
-            specialRequestForm.addEventListener('submit', handleSpecialRequest);
         }
 
         // Initialize the app when the page loads
