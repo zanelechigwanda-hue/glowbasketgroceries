@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glow Basket Groceries - Complete Solution</title>
+    <title>Glow Basket Groceries</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -489,6 +489,160 @@
             display: block;
         }
 
+        /* Admin Panel */
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            color: white;
+            padding: 2rem;
+            overflow: auto;
+            display: none;
+        }
+
+        .admin-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--dark);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--secondary);
+        }
+
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .admin-form input, 
+        .admin-form select, 
+        .admin-form textarea {
+            padding: 0.8rem;
+            border-radius: var(--border-radius);
+            border: none;
+            background: white;
+            color: var(--dark);
+        }
+
+        .admin-form button {
+            padding: 0.8rem;
+            border-radius: var(--border-radius);
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .admin-form button:hover {
+            background: #7cb358;
+        }
+
+        .admin-list {
+            max-height: 300px;
+            overflow: auto;
+            border: 1px solid #6c757d;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+        }
+
+        .admin-list-item {
+            padding: 0.8rem;
+            border-bottom: 1px solid #495057;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .admin-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .close-admin {
+            margin-top: 1rem;
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: var(--border-radius);
+            border: none;
+            background: #6c757d;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Special Request Section */
+        .special-request {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        .special-request h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .special-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+        }
+
+        .form-group input, 
+        .form-group textarea {
+            padding: 0.8rem;
+            border-radius: var(--border-radius);
+            border: 1px solid #ddd;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .submit-request {
+            grid-column: 1 / -1;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .submit-request:hover {
+            background: #7cb358;
+        }
+
         /* Footer */
         footer {
             background: var(--dark);
@@ -549,6 +703,10 @@
             .cart-container {
                 width: 320px;
             }
+            
+            .special-form {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
@@ -589,8 +747,8 @@
                 <input type="text" id="searchInput" placeholder="Search for products (e.g. 2kg rice)...">
             </div>
             <div class="user-actions">
-                <button class="btn btn-outline" id="accountBtn">
-                    <i class="fas fa-user"></i> Account
+                <button class="btn btn-outline" id="adminBtn">
+                    <i class="fas fa-lock"></i> Admin
                 </button>
                 <button class="btn btn-primary">
                     <i class="fas fa-map-marker-alt"></i> Lusaka
@@ -617,6 +775,34 @@
         
         <div class="products-grid" id="productsGrid">
             <!-- Products will be dynamically added here -->
+        </div>
+        
+        <!-- Special Request Section -->
+        <div class="special-request">
+            <h3><i class="fas fa-concierge-bell"></i> Special Requests & Delivery</h3>
+            <form class="special-form" id="specialRequestForm">
+                <div class="form-group">
+                    <label for="customerName">Full Name</label>
+                    <input type="text" id="customerName" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerPhone">Phone Number</label>
+                    <input type="tel" id="customerPhone" placeholder="+260 97 123 4567" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deliveryAddress">Delivery Address</label>
+                    <textarea id="deliveryAddress" placeholder="Enter your full delivery address" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="specialItems">Special Items Request</label>
+                    <textarea id="specialItems" placeholder="List any specific items you need that are not in our catalog..."></textarea>
+                </div>
+                
+                <button type="submit" class="submit-request">Submit Request</button>
+            </form>
         </div>
     </div>
 
@@ -652,50 +838,39 @@
     <!-- Overlay -->
     <div class="overlay" id="overlay"></div>
 
-    <!-- Admin Panel (Hidden by default) -->
-    <div id="adminPanel" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; color:white; padding:2rem; overflow:auto;">
-        <div style="max-width:1000px; margin:0 auto; background:var(--dark); padding:2rem; border-radius:var(--border-radius);">
-            <h2 style="text-align:center; margin-bottom:2rem; color:var(--secondary);">Admin Panel</h2>
+    <!-- Admin Panel (Password Protected) -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-content">
+            <h2 class="admin-header">Admin Panel - Glow Basket Groceries</h2>
             
-            <div style="display:flex; gap:2rem;">
-                <div style="flex:1;">
-                    <h3>Manage Products</h3>
-                    <form id="productForm">
-                        <input type="text" id="productName" placeholder="Product Name" required style="width:100%; padding:0.8rem; margin:0.5rem 0; border-radius:var(--border-radius); border:none;">
-                        <input type="number" id="productPrice" placeholder="Price (ZK)" step="0.01" required style="width:100%; padding:0.8rem; margin:0.5rem 0; border-radius:var(--border-radius); border:none;">
-                        <select id="productCategory" required style="width:100%; padding:0.8rem; margin:0.5rem 0; border-radius:var(--border-radius); border:none;">
-                            <option value="">Select Category</option>
-                            <option value="Staples">Staples</option>
-                            <option value="Produce">Produce</option>
-                            <option value="Beverages">Beverages</option>
-                            <option value="Snacks">Snacks</option>
-                            <option value="Household">Household</option>
-                            <option value="Personal Care">Personal Care</option>
-                        </select>
-                        <textarea id="productDescription" placeholder="Description" style="width:100%; padding:0.8rem; margin:0.5rem 0; border-radius:var(--border-radius); border:none; height:100px;"></textarea>
-                        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">Add Product</button>
-                    </form>
-                    
-                    <h3 style="margin-top:2rem;">Current Products</h3>
-                    <div id="productList" style="max-height:300px; overflow:auto; border:1px solid #6c757d; padding:1rem; border-radius:var(--border-radius);">
-                        <!-- Products will be listed here -->
-                    </div>
-                </div>
-                
-                <div style="flex:1;">
-                    <h3>Manage Orders</h3>
-                    <div id="orderList" style="max-height:400px; overflow:auto; border:1px solid #6c757d; padding:1rem; border-radius:var(--border-radius);">
-                        <!-- Orders will be listed here -->
-                    </div>
-                    
-                    <h3 style="margin-top:2rem;">User Accounts</h3>
-                    <div id="userList" style="max-height:300px; overflow:auto; border:1px solid #6c757d; padding:1rem; border-radius:var(--border-radius);">
-                        <!-- Users will be listed here -->
-                    </div>
-                </div>
+            <div class="admin-form">
+                <h3>Add New Product</h3>
+                <input type="text" id="productName" placeholder="Product Name" required>
+                <input type="number" id="productPrice" placeholder="Price (ZK)" step="0.01" required>
+                <select id="productCategory" required>
+                    <option value="">Select Category</option>
+                    <option value="Staples">Staples</option>
+                    <option value="Produce">Produce</option>
+                    <option value="Beverages">Beverages</option>
+                    <option value="Snacks">Snacks</option>
+                    <option value="Household">Household</option>
+                    <option value="Personal Care">Personal Care</option>
+                </select>
+                <textarea id="productDescription" placeholder="Description"></textarea>
+                <button id="addProductBtn">Add Product</button>
             </div>
             
-            <button id="closeAdmin" class="btn btn-outline" style="margin-top:2rem; width:100%;">Close Admin Panel</button>
+            <h3 style="margin-top: 2rem;">Current Products</h3>
+            <div class="admin-list" id="productList">
+                <!-- Products will be listed here -->
+            </div>
+            
+            <h3 style="margin-top: 2rem;">Recent Orders</h3>
+            <div class="admin-list" id="orderList">
+                <!-- Orders will be listed here -->
+            </div>
+            
+            <button class="close-admin" id="closeAdmin">Close Admin Panel</button>
         </div>
     </div>
 
@@ -733,8 +908,8 @@
                 <h3><i class="fas fa-location-dot"></i> Contact</h3>
                 <ul class="footer-links">
                     <li><i class="fas fa-map-marker-alt"></i> Lusaka, Zambia</li>
-                    <li><a href="tel:+260971234567"><i class="fas fa-phone"></i> +260 97 123 4567</a></li>
-                    <li><a href="mailto:info@glowbasket.com"><i class="fas fa-envelope"></i> info@glowbasket.com</a></li>
+                    <li><a href="tel:+260975886651"><i class="fas fa-phone"></i> +260 97 588 6651</a></li>
+                    <li><a href="mailto:zanelechigwanda@gmail.com"><i class="fas fa-envelope"></i> zanelechigwanda@gmail.com</a></li>
                     <li>
                         <div class="social-icons" style="display: flex; gap: 10px; margin-top: 10px;">
                             <a href="#" style="color: white;"><i class="fab fa-facebook"></i></a>
@@ -782,13 +957,13 @@
         const overlay = document.getElementById('overlay');
         const categoryBtns = document.querySelectorAll('.category-btn');
         const checkoutBtn = document.getElementById('checkoutBtn');
-        const accountBtn = document.getElementById('accountBtn');
+        const adminBtn = document.getElementById('adminBtn');
         const adminPanel = document.getElementById('adminPanel');
         const closeAdmin = document.getElementById('closeAdmin');
-        const productForm = document.getElementById('productForm');
+        const addProductBtn = document.getElementById('addProductBtn');
         const productList = document.getElementById('productList');
         const orderList = document.getElementById('orderList');
-        const userList = document.getElementById('userList');
+        const specialRequestForm = document.getElementById('specialRequestForm');
 
         // Initialize the app
         function initApp() {
@@ -797,7 +972,6 @@
             loadCartFromStorage();
             renderProductList();
             renderOrderList();
-            renderUserList();
         }
 
         // Load cart from localStorage
@@ -981,7 +1155,7 @@
             orders.push(order);
             localStorage.setItem('glowBasketOrders', JSON.stringify(orders));
             
-            alert("Thank you for your order! Your order has been placed successfully.");
+            alert("Thank you for your order! Your order has been placed successfully. We'll contact you shortly to confirm delivery details.");
             
             // Clear cart after checkout
             cart = [];
@@ -999,15 +1173,13 @@
             productList.innerHTML = '';
             products.forEach(product => {
                 const productDiv = document.createElement('div');
-                productDiv.className = 'product-item';
+                productDiv.className = 'admin-list-item';
                 productDiv.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; padding:0.5rem 0; border-bottom:1px solid #495057;">
-                        <div>
-                            <strong>${product.name}</strong><br>
-                            <span>ZK ${product.price.toFixed(2)}</span> - ${product.category}
-                        </div>
-                        <button class="btn btn-outline" onclick="editProduct(${product.id})" style="padding:0.3rem 0.8rem; font-size:0.9rem;">Edit</button>
+                    <div>
+                        <strong>${product.name}</strong><br>
+                        <span>ZK ${product.price.toFixed(2)}</span> - ${product.category}
                     </div>
+                    <button class="btn btn-outline" onclick="editProduct(${product.id})" style="padding:0.3rem 0.8rem; font-size:0.9rem;">Edit</button>
                 `;
                 productList.appendChild(productDiv);
             });
@@ -1025,56 +1197,30 @@
             
             orders.forEach(order => {
                 const orderDiv = document.createElement('div');
-                orderDiv.className = 'order-item';
+                orderDiv.className = 'admin-list-item';
                 orderDiv.innerHTML = `
-                    <div style="padding:0.8rem; border-bottom:1px solid #495057; margin-bottom:0.5rem;">
-                        <div style="display:flex; justify-content:space-between;">
-                            <strong>Order #${order.id}</strong>
-                            <span>${order.date}</span>
-                        </div>
-                        <div>Items: ${order.items.length}, Total: ZK ${order.total.toFixed(2)}</div>
-                        <div style="margin-top:0.5rem;">
-                            Status: <span style="color:var(--secondary); font-weight:bold;">${order.status}</span>
-                        </div>
+                    <div>
+                        <strong>Order #${order.id}</strong><br>
+                        Items: ${order.items.length}, Total: ZK ${order.total.toFixed(2)}<br>
+                        <small>${order.date}</small>
                     </div>
+                    <span style="color:var(--secondary); font-weight:bold;">${order.status}</span>
                 `;
                 orderList.appendChild(orderDiv);
             });
         }
 
-        // Render user list in admin panel
-        function renderUserList() {
-            userList.innerHTML = '';
-            
-            // Mock user data (in a real app, this would come from a database)
-            const users = [
-                { id: 1, name: "John Doe", email: "john@example.com", phone: "+260 97 123 4567", address: "Lusaka, Zambia" },
-                { id: 2, name: "Jane Smith", email: "jane@example.com", phone: "+260 97 987 6543", address: "Ndola, Zambia" },
-                { id: 3, name: "Mike Johnson", email: "mike@example.com", phone: "+260 96 111 2222", address: "Livingstone, Zambia" }
-            ];
-            
-            users.forEach(user => {
-                const userDiv = document.createElement('div');
-                userDiv.className = 'user-item';
-                userDiv.innerHTML = `
-                    <div style="padding:0.8rem; border-bottom:1px solid #495057; margin-bottom:0.5rem;">
-                        <strong>${user.name}</strong><br>
-                        <span>${user.email}</span><br>
-                        <small>${user.phone} | ${user.address}</small>
-                    </div>
-                `;
-                userList.appendChild(userDiv);
-            });
-        }
-
         // Add new product
-        function addProduct(e) {
-            e.preventDefault();
-            
+        function addProduct() {
             const name = document.getElementById('productName').value;
             const price = parseFloat(document.getElementById('productPrice').value);
             const category = document.getElementById('productCategory').value;
             const description = document.getElementById('productDescription').value;
+            
+            if (!name || !price || !category) {
+                alert("Please fill in all required fields");
+                return;
+            }
             
             // Generate a new ID (in a real app, this would be handled by the database)
             const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
@@ -1094,7 +1240,10 @@
             renderProductList();
             
             // Reset form
-            productForm.reset();
+            document.getElementById('productName').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productCategory').value = '';
+            document.getElementById('productDescription').value = '';
             
             alert("Product added successfully!");
         }
@@ -1117,6 +1266,41 @@
                 
                 alert("Product loaded for editing. You can update the form and save changes.");
             }
+        }
+
+        // Handle special request form
+        function handleSpecialRequest(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('customerName').value;
+            const phone = document.getElementById('customerPhone').value;
+            const address = document.getElementById('deliveryAddress').value;
+            const items = document.getElementById('specialItems').value;
+            
+            if (!name || !phone || !address) {
+                alert("Please fill in all required fields");
+                return;
+            }
+            
+            // Create a mock special request
+            const request = {
+                id: Date.now(),
+                name,
+                phone,
+                address,
+                items: items || "No specific items requested",
+                date: new Date().toLocaleDateString()
+            };
+            
+            // Save to localStorage
+            const requests = JSON.parse(localStorage.getItem('glowBasketRequests') || '[]');
+            requests.push(request);
+            localStorage.setItem('glowBasketRequests', JSON.stringify(requests));
+            
+            alert("Your request has been submitted successfully! We'll contact you shortly to confirm your order.");
+            
+            // Reset form
+            specialRequestForm.reset();
         }
 
         // Setup event listeners
@@ -1160,18 +1344,28 @@
             // Checkout button
             checkoutBtn.addEventListener('click', handleCheckout);
             
-            // Account button - show admin panel for demo purposes
-            accountBtn.addEventListener('click', () => {
-                adminPanel.style.display = 'block';
+            // Admin panel - password protected
+            adminBtn.addEventListener('click', () => {
+                const password = prompt("Enter admin password:");
+                if (password === "admin123") { // In a real app, this would be secure
+                    adminPanel.style.display = 'block';
+                    overlay.classList.add('active');
+                } else {
+                    alert("Incorrect password!");
+                }
             });
             
             // Close admin panel
             closeAdmin.addEventListener('click', () => {
                 adminPanel.style.display = 'none';
+                overlay.classList.remove('active');
             });
             
-            // Add product form
-            productForm.addEventListener('submit', addProduct);
+            // Add product button
+            addProductBtn.addEventListener('click', addProduct);
+            
+            // Special request form
+            specialRequestForm.addEventListener('submit', handleSpecialRequest);
         }
 
         // Initialize the app when the page loads
