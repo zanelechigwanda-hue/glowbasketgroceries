@@ -550,7 +550,7 @@
         }
 
         .admin-list {
-            max-height: 300px;
+            max-height: 400px;
             overflow: auto;
             border: 1px solid #6c757d;
             padding: 1rem;
@@ -782,17 +782,17 @@
             <h3><i class="fas fa-concierge-bell"></i> Special Requests & Delivery</h3>
             <form class="special-form" id="specialRequestForm">
                 <div class="form-group">
-                    <label for="customerName">Full Name</label>
+                    <label for="customerName">Full Name *</label>
                     <input type="text" id="customerName" placeholder="Enter your full name" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="customerPhone">Phone Number</label>
-                    <input type="tel" id="customerPhone" placeholder="+260 97 123 4567" required>
+                    <label for="customerContact">Email or Phone *</label>
+                    <input type="text" id="customerContact" placeholder="Enter email or phone" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="deliveryAddress">Delivery Address</label>
+                    <label for="deliveryAddress">Delivery Address *</label>
                     <textarea id="deliveryAddress" placeholder="Enter your full delivery address" required></textarea>
                 </div>
                 
@@ -865,9 +865,14 @@
                 <!-- Products will be listed here -->
             </div>
             
-            <h3 style="margin-top: 2rem;">Recent Orders</h3>
+            <h3 style="margin-top: 2rem;">All Orders</h3>
             <div class="admin-list" id="orderList">
                 <!-- Orders will be listed here -->
+            </div>
+            
+            <h3 style="margin-top: 2rem;">Special Requests</h3>
+            <div class="admin-list" id="requestList">
+                <!-- Special requests will be listed here -->
             </div>
             
             <button class="close-admin" id="closeAdmin">Close Admin Panel</button>
@@ -963,6 +968,7 @@
         const addProductBtn = document.getElementById('addProductBtn');
         const productList = document.getElementById('productList');
         const orderList = document.getElementById('orderList');
+        const requestList = document.getElementById('requestList');
         const specialRequestForm = document.getElementById('specialRequestForm');
 
         // Initialize the app
@@ -972,6 +978,7 @@
             loadCartFromStorage();
             renderProductList();
             renderOrderList();
+            renderRequestList();
         }
 
         // Load cart from localStorage
@@ -1147,7 +1154,10 @@
                 items: [...cart],
                 total: parseFloat(cartTotal.textContent.replace('ZK ', '')),
                 status: 'pending',
-                date: new Date().toLocaleDateString()
+                date: new Date().toLocaleDateString(),
+                customerName: document.getElementById('customerName').value || 'Not provided',
+                customerContact: document.getElementById('customerContact').value || 'Not provided',
+                deliveryAddress: document.getElementById('deliveryAddress').value || 'Not provided'
             };
             
             // Save order to localStorage
@@ -1201,12 +1211,44 @@
                 orderDiv.innerHTML = `
                     <div>
                         <strong>Order #${order.id}</strong><br>
-                        Items: ${order.items.length}, Total: ZK ${order.total.toFixed(2)}<br>
-                        <small>${order.date}</small>
+                        <div>Items: ${order.items.length}, Total: ZK ${order.total.toFixed(2)}</div>
+                        <div><small>${order.date}</small></div>
+                        <div style="margin-top:0.5rem;">
+                            <strong>Customer:</strong> ${order.customerName}<br>
+                            <strong>Contact:</strong> ${order.customerContact}<br>
+                            <strong>Address:</strong> ${order.deliveryAddress}
+                        </div>
                     </div>
                     <span style="color:var(--secondary); font-weight:bold;">${order.status}</span>
                 `;
                 orderList.appendChild(orderDiv);
+            });
+        }
+
+        // Render request list in admin panel
+        function renderRequestList() {
+            requestList.innerHTML = '';
+            const requests = JSON.parse(localStorage.getItem('glowBasketRequests') || '[]');
+            
+            if (requests.length === 0) {
+                requestList.innerHTML = '<p>No special requests yet</p>';
+                return;
+            }
+            
+            requests.forEach(request => {
+                const requestDiv = document.createElement('div');
+                requestDiv.className = 'admin-list-item';
+                requestDiv.innerHTML = `
+                    <div>
+                        <strong>Request #${request.id}</strong><br>
+                        <div><strong>Customer:</strong> ${request.name}</div>
+                        <div><strong>Contact:</strong> ${request.phone}</div>
+                        <div><strong>Address:</strong> ${request.address}</div>
+                        <div style="margin-top:0.5rem;"><strong>Items:</strong> ${request.items}</div>
+                        <div><small>${request.date}</small></div>
+                    </div>
+                `;
+                requestList.appendChild(requestDiv);
             });
         }
 
@@ -1273,11 +1315,11 @@
             e.preventDefault();
             
             const name = document.getElementById('customerName').value;
-            const phone = document.getElementById('customerPhone').value;
+            const contact = document.getElementById('customerContact').value;
             const address = document.getElementById('deliveryAddress').value;
             const items = document.getElementById('specialItems').value;
             
-            if (!name || !phone || !address) {
+            if (!name || !contact || !address) {
                 alert("Please fill in all required fields");
                 return;
             }
@@ -1286,7 +1328,7 @@
             const request = {
                 id: Date.now(),
                 name,
-                phone,
+                contact,
                 address,
                 items: items || "No specific items requested",
                 date: new Date().toLocaleDateString()
@@ -1301,6 +1343,9 @@
             
             // Reset form
             specialRequestForm.reset();
+            
+            // Update admin panel
+            renderRequestList();
         }
 
         // Setup event listeners
